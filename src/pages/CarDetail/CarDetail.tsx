@@ -1,116 +1,118 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { apiService } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 import "./CarDetail.css";
 
 interface Car {
-  id: number;
+  _id: string;
   name: string;
   type: string;
   seats: number;
   price: number;
   image: string;
-  description: string;
-  features: string[];
+  description?: string;
+  features?: string[];
   available: boolean;
 }
-
-const mockCars: Record<string, Car> = {
-  "1": {
-    id: 1,
-    name: "Toyota Camry",
-    type: "Sedan",
-    seats: 5,
-    price: 45,
-    image: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&h=600&fit=crop",
-    description: "The Toyota Camry is a reliable and comfortable sedan perfect for daily commutes and long trips. Features include advanced safety systems, fuel efficiency, and spacious interior.",
-    features: ["Bluetooth", "GPS Navigation", "Backup Camera", "Cruise Control", "Air Conditioning"],
-    available: true
-  },
-  "2": {
-    id: 2,
-    name: "Honda Accord",
-    type: "Sedan",
-    seats: 5,
-    price: 48,
-    image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop",
-    description: "The Honda Accord offers excellent fuel economy and a smooth ride. Ideal for business travelers and families.",
-    features: ["Bluetooth", "GPS Navigation", "Backup Camera", "Leather Seats", "Sunroof"],
-    available: true
-  },
-  "3": {
-    id: 3,
-    name: "Ford Explorer",
-    type: "SUV",
-    seats: 7,
-    price: 75,
-    image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop",
-    description: "Spacious SUV perfect for families and group trips. Offers ample cargo space and comfortable seating for up to 7 passengers.",
-    features: ["Third Row Seating", "All-Wheel Drive", "GPS Navigation", "Backup Camera", "Roof Rack"],
-    available: true
-  },
-  "4": {
-    id: 4,
-    name: "BMW 3 Series",
-    type: "Luxury",
-    seats: 5,
-    price: 120,
-    image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=600&fit=crop",
-    description: "Experience luxury and performance with the BMW 3 Series. Premium features and exceptional driving experience.",
-    features: ["Leather Seats", "Premium Sound System", "GPS Navigation", "Sunroof", "Heated Seats"],
-    available: true
-  },
-  "5": {
-    id: 5,
-    name: "Mercedes-Benz C-Class",
-    type: "Luxury",
-    seats: 5,
-    price: 130,
-    image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&h=600&fit=crop",
-    description: "Luxury and elegance combined. The Mercedes-Benz C-Class offers premium comfort and advanced technology.",
-    features: ["Premium Leather", "Advanced Safety", "GPS Navigation", "Panoramic Sunroof", "Premium Audio"],
-    available: true
-  },
-  "6": {
-    id: 6,
-    name: "Nissan Altima",
-    type: "Sedan",
-    seats: 5,
-    price: 42,
-    image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=600&fit=crop",
-    description: "Affordable and reliable sedan with great fuel economy. Perfect for budget-conscious travelers.",
-    features: ["Bluetooth", "Backup Camera", "Air Conditioning", "USB Ports", "Keyless Entry"],
-    available: true
-  }
-};
 
 export default function CarDetail(): React.JSX.Element {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const car = id ? mockCars[id] : undefined;
+  const { isAuthenticated } = useAuth();
+  const [car, setCar] = useState<Car | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const [bookingLoading, setBookingLoading] = useState<boolean>(false);
+  const [bookingMessage, setBookingMessage] = useState<string>("");
 
-  if (!car) {
+  useEffect(() => {
+    if (id) {
+      fetchCar();
+    }
+  }, [id]);
+
+  const fetchCar = async () => {
+    if (!id) return;
+    setLoading(true);
+    setError("");
+    try {
+      const response = await apiService.getCar(id);
+      if (response.success && response.data) {
+        setCar(response.data);
+      } else {
+        setError(response.error || "Car not found");
+      }
+    } catch (err) {
+      setError("Failed to load car details");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBooking = async (): Promise<void> => {
+    if (!startDate || !endDate) {
+      setBookingMessage("Please select both start and end dates");
+      return;
+    }
+
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    if (!car || !id) return;
+
+    setBookingLoading(true);
+    setBookingMessage("");
+
+    try {
+      const response = await apiService.createBooking({
+        carId: id,
+        startDate,
+        endDate,
+      });
+
+      if (response.success) {
+        setBookingMessage("Booking created successfully!");
+        setStartDate("");
+        setEndDate("");
+      } else {
+        setBookingMessage(response.error || "Failed to create booking");
+      }
+    } catch (err) {
+      setBookingMessage("An error occurred. Please try again.");
+    } finally {
+      setBookingLoading(false);
+    }
+  };
+
+  if (loading) {
     return (
       <div className="car-detail-page">
         <div className="container">
-          <div className="not-found">
-            <h2>Car not found</h2>
-            <button className="back-button" onClick={() => navigate("/cars")}>Back to Cars</button>
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <p>Loading car details...</p>
           </div>
         </div>
       </div>
     );
   }
 
-  const handleBooking = (): void => {
-    if (!startDate || !endDate) {
-      alert("Please select both start and end dates");
-      return;
-    }
-    // Navigate to booking page or show booking modal
-    alert(`Booking ${car.name} from ${startDate} to ${endDate}`);
-  };
+  if (error || !car) {
+    return (
+      <div className="car-detail-page">
+        <div className="container">
+          <div className="not-found">
+            <h2>{error || "Car not found"}</h2>
+            <button className="back-button" onClick={() => navigate("/cars")}>Back to Cars</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="car-detail-page">
@@ -141,17 +143,30 @@ export default function CarDetail(): React.JSX.Element {
               <p>{car.description}</p>
             </div>
 
-            <div className="car-features">
-              <h3>Features</h3>
-              <ul>
-                {car.features.map((feature, index) => (
-                  <li key={index}>{feature}</li>
-                ))}
-              </ul>
-            </div>
+            {car.features && car.features.length > 0 && (
+              <div className="car-features">
+                <h3>Features</h3>
+                <ul>
+                  {car.features.map((feature, index) => (
+                    <li key={index}>{feature}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <div className="booking-section">
               <h3>Book This Car</h3>
+              {bookingMessage && (
+                <div style={{ 
+                  padding: '0.75rem', 
+                  marginBottom: '1rem', 
+                  borderRadius: '4px',
+                  backgroundColor: bookingMessage.includes('success') ? '#d4edda' : '#f8d7da',
+                  color: bookingMessage.includes('success') ? '#155724' : '#721c24'
+                }}>
+                  {bookingMessage}
+                </div>
+              )}
               <div className="date-inputs">
                 <div className="date-input">
                   <label>Start Date</label>
@@ -160,6 +175,7 @@ export default function CarDetail(): React.JSX.Element {
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
                     min={new Date().toISOString().split("T")[0]}
+                    disabled={bookingLoading}
                   />
                 </div>
                 <div className="date-input">
@@ -169,11 +185,16 @@ export default function CarDetail(): React.JSX.Element {
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                     min={startDate || new Date().toISOString().split("T")[0]}
+                    disabled={bookingLoading}
                   />
                 </div>
               </div>
-              <button className="book-button" onClick={handleBooking}>
-                Book Now
+              <button 
+                className="book-button" 
+                onClick={handleBooking}
+                disabled={bookingLoading}
+              >
+                {bookingLoading ? "Booking..." : "Book Now"}
               </button>
             </div>
           </div>

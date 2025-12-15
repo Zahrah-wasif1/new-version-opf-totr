@@ -1,5 +1,6 @@
 import { useState, FormEvent, ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import "./Login.css";
 
 interface FormData {
@@ -12,18 +13,37 @@ export default function Login(): React.JSX.Element {
     email: "",
     password: ""
   });
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError("");
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    // Handle login logic here
-    alert("Login functionality will be implemented with backend integration");
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await login(formData.email, formData.password);
+      
+      if (result.success) {
+        navigate("/");
+      } else {
+        setError(result.error || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,6 +54,11 @@ export default function Login(): React.JSX.Element {
           <p>Welcome back! Please login to your account.</p>
 
           <form className="login-form" onSubmit={handleSubmit}>
+            {error && (
+              <div className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>
+                {error}
+              </div>
+            )}
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <input
@@ -44,6 +69,7 @@ export default function Login(): React.JSX.Element {
                 onChange={handleChange}
                 required
                 placeholder="Enter your email"
+                disabled={loading}
               />
             </div>
 
@@ -57,6 +83,7 @@ export default function Login(): React.JSX.Element {
                 onChange={handleChange}
                 required
                 placeholder="Enter your password"
+                disabled={loading}
               />
             </div>
 
@@ -70,8 +97,8 @@ export default function Login(): React.JSX.Element {
               </Link>
             </div>
 
-            <button type="submit" className="login-button">
-              Login
+            <button type="submit" className="login-button" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 

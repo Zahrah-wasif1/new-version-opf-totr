@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AdminLayout from "./components/AdminLayout";
@@ -19,40 +19,38 @@ import "./App.css";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route
-          path="/*"
-          element={
-            <div className="app-wrapper">
-              <Header />
-              <main className="main-content">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/cars" element={<Cars />} />
-                  <Route path="/cars/:id" element={<CarDetail />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/blogs" element={<Blogs />} />
-                </Routes>
-              </main>
-              <Footer />
-            </div>
-          }
-        />
-        {/* Admin Routes */}
-        <Route path="/admin/*" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="cars" element={<AdminCars />} />
-          <Route path="bookings" element={<AdminBookings />} />
-          <Route path="users" element={<AdminUsers />} />
-          <Route path="settings" element={<AdminSettings />} />
-        </Route>
-      </Routes>
-    </Router>
+    <Routes>
+      {/* Public Routes */}
+      <Route
+        path="/*"
+        element={
+          <div className="app-wrapper">
+            <Header />
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/cars" element={<Cars />} />
+                <Route path="/cars/:id" element={<CarDetail />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/blogs" element={<Blogs />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        }
+      />
+      {/* Admin Routes */}
+      <Route path="/admin/*" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="cars" element={<AdminCars />} />
+        <Route path="bookings" element={<AdminBookings />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="settings" element={<AdminSettings />} />
+      </Route>
+    </Routes>
   );
 }
 

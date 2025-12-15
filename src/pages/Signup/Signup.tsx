@@ -1,5 +1,6 @@
 import { useState, FormEvent, ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import "./Signup.css";
 
 interface FormData {
@@ -18,22 +19,53 @@ export default function Signup(): React.JSX.Element {
     password: "",
     confirmPassword: ""
   });
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const { signup } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError("");
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    setError("");
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
-    // Handle signup logic here
-    alert("Signup functionality will be implemented with backend integration");
+
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long!");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const result = await signup({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        password: formData.password,
+      });
+      
+      if (result.success) {
+        navigate("/");
+      } else {
+        setError(result.error || "Signup failed. Please try again.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,6 +76,11 @@ export default function Signup(): React.JSX.Element {
           <p>Create your account to start renting cars</p>
 
           <form className="signup-form" onSubmit={handleSubmit}>
+            {error && (
+              <div className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>
+                {error}
+              </div>
+            )}
             <div className="form-group">
               <label htmlFor="name">Full Name</label>
               <input
@@ -54,6 +91,7 @@ export default function Signup(): React.JSX.Element {
                 onChange={handleChange}
                 required
                 placeholder="Enter your full name"
+                disabled={loading}
               />
             </div>
 
@@ -67,6 +105,7 @@ export default function Signup(): React.JSX.Element {
                 onChange={handleChange}
                 required
                 placeholder="Enter your email"
+                disabled={loading}
               />
             </div>
 
@@ -79,6 +118,7 @@ export default function Signup(): React.JSX.Element {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Enter your phone number"
+                disabled={loading}
               />
             </div>
 
@@ -91,7 +131,8 @@ export default function Signup(): React.JSX.Element {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                placeholder="Create a password"
+                placeholder="Create a password (min 6 characters)"
+                disabled={loading}
               />
             </div>
 
@@ -105,11 +146,12 @@ export default function Signup(): React.JSX.Element {
                 onChange={handleChange}
                 required
                 placeholder="Confirm your password"
+                disabled={loading}
               />
             </div>
 
-            <button type="submit" className="signup-button">
-              Sign Up
+            <button type="submit" className="signup-button" disabled={loading}>
+              {loading ? "Creating Account..." : "Sign Up"}
             </button>
           </form>
 

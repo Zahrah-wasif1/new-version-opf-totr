@@ -1,10 +1,11 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { apiService } from "../../services/api";
 import "./Cars.css";
 
 interface Car {
-  id: number;
+  _id: string;
   name: string;
   type: string;
   seats: number;
@@ -19,80 +20,53 @@ interface FilterState {
   priceRange: string;
 }
 
-const mockCars: Car[] = [
-  {
-    id: 1,
-    name: "Toyota Camry",
-    type: "Sedan",
-    seats: 5,
-    price: 45,
-    image: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&h=400&fit=crop",
-    available: true
-  },
-  {
-    id: 2,
-    name: "Honda Accord",
-    type: "Sedan",
-    seats: 5,
-    price: 48,
-    image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&h=400&fit=crop",
-    available: true
-  },
-  {
-    id: 3,
-    name: "Ford Explorer",
-    type: "SUV",
-    seats: 7,
-    price: 75,
-    image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&h=400&fit=crop",
-    available: true
-  },
-  {
-    id: 4,
-    name: "BMW 3 Series",
-    type: "Luxury",
-    seats: 5,
-    price: 120,
-    image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=400&fit=crop",
-    available: true
-  },
-  {
-    id: 5,
-    name: "Mercedes-Benz C-Class",
-    type: "Luxury",
-    seats: 5,
-    price: 130,
-    image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=400&fit=crop",
-    available: true
-  },
-  {
-    id: 6,
-    name: "Nissan Altima",
-    type: "Sedan",
-    seats: 5,
-    price: 42,
-    image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&h=400&fit=crop",
-    available: true
-  }
-];
-
 export default function Cars(): React.JSX.Element {
   const [filter, setFilter] = useState<FilterState>({ type: "all", seats: "all", priceRange: "all" });
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [cars, setCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
 
-  const filteredCars = mockCars.filter((car) => {
-    const matchesType = filter.type === "all" || car.type.toLowerCase() === filter.type.toLowerCase();
-    const matchesSeats = filter.seats === "all" || car.seats >= parseInt(filter.seats);
-    const matchesSearch = car.name.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    let matchesPrice = true;
-    if (filter.priceRange !== "all") {
-      const [min, max] = filter.priceRange.split("-").map(Number);
-      matchesPrice = car.price >= min && (max ? car.price <= max : true);
+  useEffect(() => {
+    fetchCars();
+  }, [filter, searchTerm]);
+
+  const fetchCars = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const filters: any = {
+        available: true,
+      };
+      
+      if (filter.type !== "all") {
+        filters.type = filter.type;
+      }
+      if (filter.seats !== "all") {
+        filters.seats = filter.seats;
+      }
+      if (filter.priceRange !== "all") {
+        filters.priceRange = filter.priceRange;
+      }
+      if (searchTerm) {
+        filters.search = searchTerm;
+      }
+
+      const response = await apiService.getCars(filters);
+      
+      if (response.success && response.data) {
+        setCars(response.data);
+      } else {
+        setError(response.error || "Failed to load cars");
+      }
+    } catch (err) {
+      setError("Failed to load cars. Please try again.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return matchesType && matchesSeats && matchesSearch && matchesPrice;
-  });
+  const filteredCars = cars;
 
   return (
     <div className="cars-page">
@@ -144,36 +118,46 @@ export default function Cars(): React.JSX.Element {
           </div>
         </div>
 
-        <div className="cars-grid">
-          {filteredCars.length > 0 ? (
-            filteredCars.map((car) => (
-              <div key={car.id} className="car-card">
-                <div className="car-image">
-                  <img src={car.image} alt={car.name} />
-                  {car.available && <span className="available-badge">Available</span>}
-                </div>
-                <div className="car-info">
-                  <h3>{car.name}</h3>
-                  <div className="car-details">
-                    <span>{car.type}</span>
-                    <span>{car.seats} Seats</span>
+        {loading ? (
+          <div className="loading" style={{ textAlign: 'center', padding: '2rem' }}>
+            <p>Loading cars...</p>
+          </div>
+        ) : error ? (
+          <div className="error" style={{ textAlign: 'center', padding: '2rem', color: 'red' }}>
+            <p>{error}</p>
+          </div>
+        ) : (
+          <div className="cars-grid">
+            {filteredCars.length > 0 ? (
+              filteredCars.map((car) => (
+                <div key={car._id} className="car-card">
+                  <div className="car-image">
+                    <img src={car.image} alt={car.name} />
+                    {car.available && <span className="available-badge">Available</span>}
                   </div>
-                  <div className="car-price">
-                    <span className="price">${car.price}</span>
-                    <span className="price-unit">/day</span>
+                  <div className="car-info">
+                    <h3>{car.name}</h3>
+                    <div className="car-details">
+                      <span>{car.type}</span>
+                      <span>{car.seats} Seats</span>
+                    </div>
+                    <div className="car-price">
+                      <span className="price">${car.price}</span>
+                      <span className="price-unit">/day</span>
+                    </div>
+                    <Link to={`/cars/${car._id}`} className="view-details-btn">
+                      View Details
+                    </Link>
                   </div>
-                  <Link to={`/cars/${car.id}`} className="view-details-btn">
-                    View Details
-                  </Link>
                 </div>
+              ))
+            ) : (
+              <div className="no-results">
+                <p>No cars found matching your criteria.</p>
               </div>
-            ))
-          ) : (
-            <div className="no-results">
-              <p>No cars found matching your criteria.</p>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

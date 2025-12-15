@@ -1,4 +1,5 @@
 import { useState, FormEvent, ChangeEvent } from "react";
+import { apiService } from "../../services/api";
 import "./Contact.css";
 
 interface FormData {
@@ -17,24 +18,42 @@ export default function Contact(): React.JSX.Element {
     subject: "",
     message: ""
   });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    setMessage("");
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    alert("Thank you for your message! We'll get back to you soon.");
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: ""
-    });
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const response = await apiService.submitContact(formData);
+      
+      if (response.success) {
+        setMessage("Thank you for your message! We'll get back to you soon.");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: ""
+        });
+      } else {
+        setMessage(response.error || "Failed to send message. Please try again.");
+      }
+    } catch (err) {
+      setMessage("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -86,6 +105,17 @@ export default function Contact(): React.JSX.Element {
 
           <div className="contact-form-section">
             <h2>Send us a Message</h2>
+            {message && (
+              <div style={{ 
+                padding: '0.75rem', 
+                marginBottom: '1rem', 
+                borderRadius: '4px',
+                backgroundColor: message.includes('Thank you') ? '#d4edda' : '#f8d7da',
+                color: message.includes('Thank you') ? '#155724' : '#721c24'
+              }}>
+                {message}
+              </div>
+            )}
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="name">Name *</label>
@@ -96,6 +126,7 @@ export default function Contact(): React.JSX.Element {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -108,6 +139,7 @@ export default function Contact(): React.JSX.Element {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -119,6 +151,7 @@ export default function Contact(): React.JSX.Element {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
 
@@ -131,6 +164,7 @@ export default function Contact(): React.JSX.Element {
                   value={formData.subject}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 />
               </div>
 
@@ -143,11 +177,12 @@ export default function Contact(): React.JSX.Element {
                   value={formData.message}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                 ></textarea>
               </div>
 
-              <button type="submit" className="submit-button">
-                Send Message
+              <button type="submit" className="submit-button" disabled={loading}>
+                {loading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>

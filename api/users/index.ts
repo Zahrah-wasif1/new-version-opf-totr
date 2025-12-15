@@ -1,10 +1,9 @@
-import { NextRequest } from 'next/server';
 import connectDB from '../../backend/db';
 import User from '../../backend/models/User';
 import { successResponse, errorResponse, handleError } from '../../backend/utils';
 import { requireAdmin } from '../../backend/auth';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
     await connectDB();
 

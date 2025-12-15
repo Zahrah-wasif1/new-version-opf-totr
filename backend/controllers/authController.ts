@@ -1,11 +1,10 @@
-import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import connectDB from '../db';
 import User from '../models/User';
 import { generateToken } from '../auth';
 import { successResponse, errorResponse } from '../utils';
 
-export async function signupController(req: NextRequest) {
+export async function signupController(req: Request) {
   await connectDB();
   const body = await req.json();
   const { name, email, phone, password } = body;
@@ -52,7 +51,7 @@ export async function signupController(req: NextRequest) {
   );
 }
 
-export async function loginController(req: NextRequest) {
+export async function loginController(req: Request) {
   await connectDB();
   const body = await req.json();
   const { email, password } = body;

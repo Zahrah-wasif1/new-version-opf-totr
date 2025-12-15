@@ -1,5 +1,4 @@
 
-import { NextRequest } from 'next/server';
 import {
   listCarsController,
   createCarController,
@@ -7,7 +6,7 @@ import {
 import { handleError, errorResponse } from '../../backend/utils';
 import { requireAdmin } from '../../backend/auth';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
     return await listCarsController(req);
   } catch (error) {
@@ -15,7 +14,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     await requireAdmin(req);
     return await createCarController(req);

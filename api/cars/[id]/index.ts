@@ -1,4 +1,3 @@
-import { NextRequest } from 'next/server';
 import {
   getCarController,
   updateCarController,
@@ -8,7 +7,7 @@ import { requireAdmin } from '../../../../backend/auth';
 import { errorResponse, handleError } from '../../../../backend/utils';
 
 export async function GET(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -19,7 +18,7 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -35,7 +34,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {

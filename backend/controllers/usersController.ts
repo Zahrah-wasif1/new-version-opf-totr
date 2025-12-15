@@ -1,10 +1,9 @@
-import { NextRequest } from 'next/server';
 import connectDB from '../db';
 import User from '../models/User';
 import { successResponse, errorResponse } from '../utils';
 import { requireAdmin } from '../auth';
 
-export async function listUsersController(req: NextRequest) {
+export async function listUsersController(req: Request) {
   await connectDB();
   await requireAdmin(req);
 
@@ -20,7 +19,7 @@ export async function listUsersController(req: NextRequest) {
   return successResponse(users);
 }
 
-export async function getUserController(req: NextRequest, id: string) {
+export async function getUserController(req: Request, id: string) {
   await connectDB();
   await requireAdmin(req);
 
@@ -29,7 +28,7 @@ export async function getUserController(req: NextRequest, id: string) {
   return successResponse(user);
 }
 
-export async function updateUserController(req: NextRequest, id: string) {
+export async function updateUserController(req: Request, id: string) {
   await connectDB();
   await requireAdmin(req);
 
@@ -52,7 +51,7 @@ export async function updateUserController(req: NextRequest, id: string) {
   return successResponse(user);
 }
 
-export async function deleteUserController(req: NextRequest, id: string) {
+export async function deleteUserController(req: Request, id: string) {
   await connectDB();
   await requireAdmin(req);
 

@@ -19,7 +19,8 @@
     "typeRoots": ["./types", "../node_modules/@types"],
     "paths": {
       "next/server": ["./types/next-server"],
-      "mongoose": ["../node_modules/mongoose"]
+      "mongoose": ["../node_modules/mongoose"],
+      "backend/*": ["../backend/*"]
     }
   },
   "include": ["./**/*", "../backend/**/*.ts"],

@@ -1,11 +1,10 @@
-import { NextRequest } from 'next/server';
 import connectDB from '../db';
 import Booking from '../models/Booking';
 import Car from '../models/Car';
 import { successResponse, errorResponse } from '../utils';
 import { requireAuth, requireAdmin } from '../auth';
 
-export async function listBookingsController(req: NextRequest) {
+export async function listBookingsController(req: Request) {
   await connectDB();
   const authUser = await requireAuth(req);
   const { searchParams } = new URL(req.url);
@@ -30,7 +29,7 @@ export async function listBookingsController(req: NextRequest) {
   return successResponse(bookings);
 }
 
-export async function getBookingController(req: NextRequest, id: string) {
+export async function getBookingController(req: Request, id: string) {
   await connectDB();
   const authUser = await requireAuth(req);
 
@@ -45,7 +44,7 @@ export async function getBookingController(req: NextRequest, id: string) {
   return successResponse(booking);
 }
 
-export async function createBookingController(req: NextRequest) {
+export async function createBookingController(req: Request) {
   await connectDB();
   const authUser = await requireAuth(req);
   const body = await req.json();
@@ -94,7 +93,7 @@ export async function createBookingController(req: NextRequest) {
   return successResponse(populated, 201);
 }
 
-export async function updateBookingController(req: NextRequest, id: string) {
+export async function updateBookingController(req: Request, id: string) {
   await connectDB();
   const authUser = await requireAuth(req);
   const booking = await Booking.findById(id);
@@ -123,7 +122,7 @@ export async function updateBookingController(req: NextRequest, id: string) {
   return successResponse(updated);
 }
 
-export async function deleteBookingController(req: NextRequest, id: string) {
+export async function deleteBookingController(req: Request, id: string) {
   await connectDB();
   await requireAdmin(req);
   const booking = await Booking.findByIdAndDelete(id);

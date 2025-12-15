@@ -1,11 +1,10 @@
-import { NextRequest } from 'next/server';
 import connectDB from '../../backend/db';
 import Booking from '../../backend/models/Booking';
 import Car from '../../backend/models/Car';
 import { successResponse, errorResponse, handleError } from '../../backend/utils';
 import { requireAuth } from '../../backend/auth';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
     await connectDB();
 
@@ -44,7 +43,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     await connectDB();
 

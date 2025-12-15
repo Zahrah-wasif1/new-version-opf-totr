@@ -1,4 +1,3 @@
-import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import User from './models/User';
 import connectDB from './db';
@@ -24,7 +23,7 @@ export function verifyToken(token: string): JWTPayload | null {
 }
 
 export async function authenticateUser(
-  req: NextRequest
+  req: Request
 ): Promise<{ userId: string; email: string; role: string } | null> {
   const authHeader = req.headers.get('authorization');
 
@@ -54,7 +53,7 @@ export async function authenticateUser(
 }
 
 export async function requireAuth(
-  req: NextRequest
+  req: Request
 ): Promise<{ userId: string; email: string; role: string }> {
   const user = await authenticateUser(req);
 
@@ -66,7 +65,7 @@ export async function requireAuth(
 }
 
 export async function requireAdmin(
-  req: NextRequest
+  req: Request
 ): Promise<{ userId: string; email: string; role: string }> {
   const user = await requireAuth(req);
 

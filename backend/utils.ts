@@ -1,22 +1,26 @@
-import { NextResponse } from 'next/server';
-
 export function successResponse(data: any, status: number = 200) {
-  return NextResponse.json(
-    {
+  return new Response(
+    JSON.stringify({
       success: true,
       data,
-    },
-    { status }
+    }),
+    {
+      status,
+      headers: { 'Content-Type': 'application/json' },
+    }
   );
 }
 
 export function errorResponse(message: string, status: number = 400) {
-  return NextResponse.json(
-    {
+  return new Response(
+    JSON.stringify({
       success: false,
       error: message,
-    },
-    { status }
+    }),
+    {
+      status,
+      headers: { 'Content-Type': 'application/json' },
+    }
   );
 }
 

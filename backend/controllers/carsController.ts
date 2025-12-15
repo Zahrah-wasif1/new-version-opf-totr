@@ -1,9 +1,8 @@
-import { NextRequest } from 'next/server';
 import connectDB from '../db';
 import Car from '../models/Car';
 import { successResponse, errorResponse } from '../utils';
 
-export async function listCarsController(req: NextRequest) {
+export async function listCarsController(req: Request) {
   await connectDB();
 
   const { searchParams } = new URL(req.url);
@@ -39,7 +38,7 @@ export async function listCarsController(req: NextRequest) {
   return successResponse(cars);
 }
 
-export async function createCarController(req: NextRequest) {
+export async function createCarController(req: Request) {
   await connectDB();
   const body = await req.json();
   const { name, type, seats, price, image, description, features, available } = body;

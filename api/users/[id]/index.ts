@@ -1,11 +1,10 @@
-import { NextRequest } from 'next/server';
 import connectDB from '../../../backend/db';
 import User from '../../../backend/models/User';
 import { successResponse, errorResponse, handleError } from '../../../backend/utils';
 import { requireAdmin } from '../../../backend/auth';
 
 export async function GET(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -30,7 +29,7 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -68,7 +67,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {

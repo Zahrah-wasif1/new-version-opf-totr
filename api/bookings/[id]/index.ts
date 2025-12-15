@@ -1,11 +1,10 @@
-import { NextRequest } from 'next/server';
-import connectDB from '../../../../backend/db';
-import Booking from '../../../../backend/models/Booking';
-import { successResponse, errorResponse, handleError } from '../../../../backend/utils';
-import { requireAuth, requireAdmin } from '../../../../backend/auth';
+import connectDB from 'backend/db';
+import Booking from 'backend/models/Booking';
+import { successResponse, errorResponse, handleError } from 'backend/utils';
+import { requireAuth, requireAdmin } from 'backend/auth';
 
 export async function GET(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -37,7 +36,7 @@ export async function GET(
 }
 
 export async function PUT(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -86,7 +85,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   try {

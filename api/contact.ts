@@ -1,7 +1,6 @@
-import { NextRequest } from 'next/server';
-import { successResponse, errorResponse, handleError } from './lib/utils';
+import { successResponse, errorResponse, handleError } from '../backend/utils';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { name, email, phone, subject, message } = body;

@@ -2,9 +2,9 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "lib": ["ES2020"],
+    "lib": ["ES2020", "DOM"],
     "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": "..",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -13,9 +13,16 @@
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "typeRoots": ["./types", "../node_modules/@types"],
+    "paths": {
+      "next/server": ["./types/next-server"],
+      "mongoose": ["../node_modules/mongoose"]
+    }
   },
-  "include": ["**/*.ts"],
+  "include": ["./**/*", "../backend/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
 

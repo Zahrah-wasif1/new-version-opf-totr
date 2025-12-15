@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server';
-import connectDB from '../../../lib/db';
-import Booking from '../../../models/Booking';
-import { successResponse, errorResponse, handleError } from '../../../lib/utils';
-import { requireAuth, requireAdmin } from '../../../lib/auth';
+import connectDB from '../../../../backend/db';
+import Booking from '../../../../backend/models/Booking';
+import { successResponse, errorResponse, handleError } from '../../../../backend/utils';
+import { requireAuth, requireAdmin } from '../../../../backend/auth';
 
 export async function GET(
   req: NextRequest,

@@ -1,0 +1,348 @@
+.home-page {
+  width: 100%;
+}
+
+.cars-section {
+  padding: 80px 20px;
+  background-color: #ffffff;
+}
+
+.section-header {
+  margin-bottom: 50px;
+}
+
+.section-header .section-title {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.view-all-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.view-all-btn {
+  padding: 16px 35px;
+  background-color: #22c55e;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 1.05em;
+  border: none;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.view-all-btn:hover {
+  background-color: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.cars-grid-home {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.car-card-home {
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.car-card-home:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.car-image-home {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.car-image-home img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.car-card-home:hover .car-image-home img {
+  transform: scale(1.1);
+}
+
+.available-badge-home {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #22c55e;
+  color: #ffffff;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.car-info-home {
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.car-info-home h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+}
+
+.car-details-home {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  color: #666666;
+  font-size: 0.9em;
+}
+
+.car-price-home {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.price-home {
+  font-size: 2em;
+  font-weight: bold;
+  color: #22c55e;
+}
+
+.price-unit-home {
+  color: #666666;
+  font-size: 1em;
+}
+
+.view-details-btn-home {
+  display: block;
+  width: 100%;
+  padding: 16px 24px;
+  background-color: #22c55e;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.05em;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  margin-top: auto;
+  box-sizing: border-box;
+}
+
+.view-details-btn-home:hover {
+  background-color: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.features-section {
+  padding: 80px 20px;
+  background-color: #f8f9fa;
+}
+
+/* Container style is now global in index.css */
+
+.section-title {
+  text-align: center;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 50px;
+  color: #1a1a1a;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.feature-card {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.feature-icon {
+  font-size: 3em;
+  margin-bottom: 20px;
+  color: #22c55e;
+}
+
+.feature-icon i {
+  display: block;
+}
+
+.feature-card h3 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  color: #1a1a1a;
+}
+
+.feature-card p {
+  color: #666666;
+  line-height: 1.6;
+}
+
+.testimonials-section {
+  padding: 80px 20px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.testimonials-section .section-title {
+  color: #ffffff;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.testimonial-card {
+  background-color: #2a2a2a;
+  padding: 30px;
+  border-radius: 10px;
+  border-left: 4px solid #22c55e;
+}
+
+.testimonial-text {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #cccccc;
+  font-style: italic;
+}
+
+.testimonial-author {
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial-author strong {
+  color: #22c55e;
+  font-size: 1.1em;
+  margin-bottom: 5px;
+}
+
+.testimonial-author span {
+  color: #888888;
+  font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+  .cars-section,
+  .features-section,
+  .testimonials-section {
+    padding: 50px 20px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .section-header .section-title {
+    text-align: center;
+    width: 100%;
+  }
+
+  .view-all-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .section-title {
+    font-size: 2em;
+  }
+
+  .cars-grid-home {
+    grid-template-columns: 1fr;
+  }
+
+  .features-grid,
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .cars-grid-home {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Fade + Move Up Animation */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatMove {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.testimonial-card {
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards, floatMove 3s ease-in-out infinite;
+}
+
+/* Stagger effect for each card */
+.testimonial-card:nth-child(1) {
+  animation-delay: 0.2s, 0s;
+}
+.testimonial-card:nth-child(2) {
+  animation-delay: 0.4s, 0.5s;
+}
+.testimonial-card:nth-child(3) {
+  animation-delay: 0.6s, 1s;
+}

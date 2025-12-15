@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 import {
   getCarController,
   updateCarController,
   deleteCarController,
-} from '../../../../backend/controllers/carsController';
-import { requireAdmin } from '../../../../backend/auth';
-import { errorResponse, handleError } from '../../../../backend/utils';
+} from '../../../backend/controllers/carsController';
+import { requireAdmin } from '../../../backend/auth';
+import { errorResponse, handleError } from '../../../backend/utils';
 
 export async function GET(
   req: Request,
@@ -48,21 +47,3 @@ export async function DELETE(
     return handleError(error);
   }
 }
-
-=======
-declare module 'backend/controllers/carsController' {
-  export function getCarController(id: string): Promise<any>;
-  export function updateCarController(id: string, data: any): Promise<any>;
-  export function deleteCarController(id: string): Promise<any>;
-}
-
-declare module 'backend/auth' {
-  import { Request } from 'express';
-  export function requireAdmin(req: Request): Promise<void>;
-}
-
-declare module 'backend/utils' {
-  export function errorResponse(message: string, status?: number): any;
-  export function handleError(error: any): any;
-}
->>>>>>> 8eeb0a6 (Initial commit)

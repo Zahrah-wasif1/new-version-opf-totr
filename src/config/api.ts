@@ -1,5 +1,20 @@
 // API Configuration
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+// In production, if VITE_API_URL is not set, use the same domain (Vercel deployment)
+const getApiUrl = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
+  // For Vercel deployment, use relative path if same domain
+  if (import.meta.env.PROD) {
+    return '/api';
+  }
+  
+  // Default for local development
+  return 'http://localhost:3000/api';
+};
+
+export const API_BASE_URL = getApiUrl();
 
 // Helper function to get auth token from localStorage
 export const getAuthToken = (): string | null => {

@@ -15,6 +15,7 @@ export default function AdminLayout(): React.JSX.Element {
     { path: "/admin/settings", icon: "fas fa-cog", label: "Settings" },
   ];
 
+  
   const handleLogout = (): void => {
     // Handle logout logic here
     navigate("/login");
